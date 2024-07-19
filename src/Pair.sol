@@ -1,58 +1,42 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.8.25;
+// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity ^0.8.13;
 
-import { SafeTransferLib } from "lib/solmate/src/utils/SafeTransferLib.sol";
-import { ABDKMathQuad } from "lib/abdk-libraries-solidity/ABDKMathQuad.sol";
+import {FullMath} from "solmate/utils/FullMath.sol";
 
-contract Pair is ERC20 {
-
-    using SafeTransferLib for ERC20;
-    using ABDKMathQuad for bytes16;
-
-    // Define p0 and p1 as constants or state variables
-    bytes16 private constant p0 = ABDKMathQuad.fromUInt(10); // Example value
-    bytes16 private constant p1 = ABDKMathQuad.fromUInt(5);  // Example value
-
-    
-    // int256 public constant INIT_UPPER_BOUND = 30;
-    // uint256 public constant IMPLIED_RATE_TIME = 365 * 86400;
-    // uint256 public constant BURNT_LIQUIDITY = 1000;
-    // address public immutable WETH;
-
-    modifier lock() {
-        if (lock_ != 1) revert Reentrancy();
-        lock_ = 0;
-        _;
-        lock_ = 1;
-    }
-
-    constructor(address weth_, string memory name_, string memory symbol_) ERC20(name_, symbol_, 18) {
-        WETH = weth_;
-    }
-
+contract InvariantChecker {
     function invariant(
-            uint256 reserveX, 
-            uint256 reserveY,
-            uint256 totalLiquidity
-    ) public returns (int256) {
-        bytes16Quad = ABDKMATHQuad.fromUInt(x);
+        uint256 amount0,
+        uint256 amount1,
+        uint256 liquidity,
+        uint256 strike
+    ) public pure returns (bool) {
+        if (liquidity == 0) return (amount0 == 0 && amount1 == 0);
 
-        uint256 scaleX = uint256(int256(rX.divWadDown(L)).powWad(int256(params.wX)));
-        uint256 scaleY = uint256(int256(rY.divWadDown(L)).powWad(int256(params.wY)));
+        // Calculate amount0 / liquidity and amount1 / liquidity with 1e18 precision
+        uint256 scaleX = FullMath.mulDiv(amount0, 1e18, liquidity);
+        uint256 scaleY = FullMath.mulDiv(amount1, 1e18, liquidity);
 
+        // Calculate strike^22 dynamically
+        uint256 strikeTo22 = fixedPointSquare(strike, 1e18);
+        for (uint256 i = 0; i < 20; i++) {
+            strikeTo22 = FullMath.mulDiv(strikeTo22, strike, 1e18);
+        }
 
-      
+        // Calculate (strike^22 - (22/23 * scaleY))^(23/22) with 1e18 precision
+        uint256 termInside = strikeTo22 - FullMath.mulDiv(22, scaleY, 23);
+        uint256 termPower = fixedPointExp(termInside, 23, 22);
+
+        return scaleX >= termPower;
     }
 
-    function initialize(
-            uint256 priceX,
-            uint256 amountX,
-            uint256 strike_,
-            uint256 fee_
-    ) external lock {
-        if (strike != 0) revert AlreadyInitialized();
-        if (strike_ < 1e18) revert InvalidStrike();
+    function fixedPointSquare(uint256 x, uint256 precision) internal pure returns (uint256) {
+        return FullMath.mulDiv(x, x, precision);
+    }
 
-        return value;
+    function fixedPointExp(uint256 base, uint256 numerator, uint256 denominator) internal pure returns (uint256) {
+        // Approximate method for demonstration
+        uint256 logBase = FullMath.log(base);
+        uint256 exponent = FullMath.mulDiv(logBase, numerator, denominator);
+        return FullMath.exp(exponent);
     }
 }
