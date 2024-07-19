@@ -1,6 +1,6 @@
 [submodule "lib/solmate"]
 	path = lib/solmate
-	url = https://github.com/Rari-Capital/solmate
+	url = https://github.com/transmissions11/solmate
 [submodule "lib/abdk-libraries-solidity"]
 	path = lib/abdk-libraries-solidity
 	url = https://github.com/abdk-consulting/abdk-libraries-solidity
