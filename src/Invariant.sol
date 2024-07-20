@@ -2,16 +2,22 @@
 pragma solidity ^0.8.7;
 
 import { UD60x18, ud, mul, div, pow, sub } from "@prb/math/src/UD60x18.sol";
+import "forge-std/src/console2.sol";
 
 contract InvariantChecker {
 
-    function invariant(
+
+// Checks the power-23 invariant
+    function checkInvariant(
         uint256 amount0,
         uint256 amount1,
         uint256 liquidity,
         uint256 strike
     ) public pure returns (bool) {
         if (liquidity == 0) return (amount0 == 0 && amount1 == 0);
+        require(liquidity > 0, "liquidity must be greater than zero");
+        require(strike > 0, "strike must be greater than zero");
+
 
         // Convert amounts to UD60x18 types
         UD60x18 udAmount0 = ud(amount0);

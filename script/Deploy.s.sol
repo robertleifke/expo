@@ -1,13 +1,21 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.8.25 <0.9.0;
+// SPDX-License-Identifier: GPL
+pragma solidity ^0.8.7;
 
-import { Foo } from "../src/Foo.sol";
+import "forge-std/src/Script.sol";
+import {InvariantChecker} from "../src/Invariant.sol";
 
-import { BaseScript } from "./Base.s.sol";
+contract DeployInvariantChecker is Script {
+    function run() external {
+        // Start broadcasting transactions
+        vm.startBroadcast();
 
-/// @dev See the Solidity Scripting tutorial: https://book.getfoundry.sh/tutorials/solidity-scripting
-contract Deploy is BaseScript {
-    function run() public broadcast returns (Foo foo) {
-        foo = new Foo();
+        // Deploy the InvariantChecker contract
+        InvariantChecker checker = new InvariantChecker();
+
+        // Stop broadcasting transactions
+        vm.stopBroadcast();
+
+        // Log the address of the deployed contract
+        console.log("InvariantChecker deployed at:", address(checker));
     }
 }
