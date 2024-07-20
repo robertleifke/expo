@@ -4,11 +4,11 @@ pragma solidity ^0.8.7;
 import { UD60x18, ud, mul, div, pow, sub } from "@prb/math/src/UD60x18.sol";
 import "forge-std/src/console2.sol";
 
-contract InvariantChecker {
+contract Quintic {
 
 
-// Checks the power-23 invariant
-    function checkInvariant(
+// Checks the quintic invariant
+    function checkQuintic(
         uint256 amount0,
         uint256 amount1,
         uint256 liquidity,
@@ -29,13 +29,13 @@ contract InvariantChecker {
         UD60x18 scale0 = div(udAmount0, udLiquidity);
         UD60x18 scale1 = div(udAmount1, udLiquidity);
 
-        // Calculate strike^22
-        UD60x18 expo22 = ud(22e18);
-        UD60x18 strikeTo22 = pow(udStrike, expo22);
+        // Calculate strike^4
+        UD60x18 expo4 = ud(4e18);
+        UD60x18 strikeTo4 = pow(udStrike, expo4);
 
-        // Calculate (strike^22 - (22/23 * scaleY))^(23/22)
-        UD60x18 insideTerm = sub(strikeTo22, mul(scale1, div(ud(22e18), ud(23e18))));
-        UD60x18 fracExpo = div(ud(23e18), ud(22e18));
+        // Calculate (strike^4 - (4/5 * scale1))^(5/4)
+        UD60x18 insideTerm = sub(strikeTo4, mul(scale1, div(ud(4e18), ud(5e18))));
+        UD60x18 fracExpo = div(ud(5e18), ud(4e18));
         UD60x18 termToExpo = pow(insideTerm, fracExpo);
 
         return scale0.unwrap() >= termToExpo.unwrap();

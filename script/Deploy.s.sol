@@ -2,7 +2,7 @@
 pragma solidity ^0.8.7;
 
 import "forge-std/src/Script.sol";
-import {InvariantChecker} from "../src/Invariant.sol";
+import {Quintic} from "../src/Quintic.sol";
 
 contract DeployInvariantChecker is Script {
     function run() external {
@@ -10,12 +10,12 @@ contract DeployInvariantChecker is Script {
         vm.startBroadcast();
 
         // Deploy the InvariantChecker contract
-        InvariantChecker checker = new InvariantChecker();
+        Quintic invariant = new Quintic();
 
         // Stop broadcasting transactions
         vm.stopBroadcast();
 
         // Log the address of the deployed contract
-        console.log("InvariantChecker deployed at:", address(checker));
+        console.log("InvariantChecker deployed at:", address(invariant));
     }
 }
