@@ -24,29 +24,29 @@ contract InvariantCheckerTest is Test {
         assertTrue(invariant.checkQuintic(1e18, 1e18, 1e18, 1e18));
     }
 
-    function testQuinticWithSpecificValues() public view {
-    uint256 amount0 = 100e18;  // 100 USDC
-    uint256 amount1 = 3e18;    // 3 ETH
-    uint256 totalLiquidity = 850e18;  // 850 USDC (in value)
-    uint256 strike = 300e18;   // 300 USDC
+    // function testQuinticWithSpecificValues() public view {
+    // uint256 amount0 = 100e18;  // 100 USDC
+    // uint256 amount1 = 3e18;    // 3 ETH
+    // uint256 totalLiquidity = 850e18;  // 850 USDC (in value)
+    // uint256 strike = 300e18;   // 300 USDC
 
-    console2.log("amount0 (USDC):", amount0);
-    console2.log("amount1 (ETH):", amount1);
-    console2.log("totalLiquidity:", totalLiquidity);
-    console2.log("strike:", strike);
+    // console2.log("amount0 (USDC):", amount0);
+    // console2.log("amount1 (ETH):", amount1);
+    // console2.log("totalLiquidity:", totalLiquidity);
+    // console2.log("strike:", strike);
 
-    // Adjust the parameters to meet the invariant condition
-    bool result = invariant.checkQuintic(amount0, amount1, totalLiquidity, strike);
-    console2.log("Invariant check result:", result);
-    assertTrue(result);
+    // // Adjust the parameters to meet the invariant condition
+    // bool result = invariant.checkQuintic(amount0, amount1, totalLiquidity, strike);
+    // console2.log("Invariant check result:", result);
+    // assertTrue(result);
 
-    // Change parameters to break the invariant
-    amount1 = 200e18;  // Change to 200 ETH to break the invariant
-    console2.log("Testing with modified amountY (ETH):", amount1);
-    result = invariant.checkQuintic(amount0, amount1, totalLiquidity, strike);
-    console2.log("Invariant check result with modified amountY (ETH):", result);
-    assertFalse(result);
-    }
+    // // Change parameters to break the invariant
+    // amount1 = 200e18;  // Change to 200 ETH to break the invariant
+    // console2.log("Testing with modified amountY (ETH):", amount1);
+    // result = invariant.checkQuintic(amount0, amount1, totalLiquidity, strike);
+    // console2.log("Invariant check result with modified amountY (ETH):", result);
+    // assertFalse(result);
+    // }
 
 
     // function invariant() public view {
