@@ -7,7 +7,10 @@
     "url": "https://github.com/PaulRBerg"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^5.0.1"
+    "@openzeppelin/contracts": "^5.0.1",
+    "@prb/math": "^4.0.3",
+    "prb-math": "^2.4.3",
+    "solmate": "^6.2.0"
   },
   "devDependencies": {
     "forge-std": "github:foundry-rs/forge-std#v1.8.1",
