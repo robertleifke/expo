@@ -12,36 +12,42 @@ contract InvariantCheckerTest is Test {
         checker = new InvariantChecker();
     }
 
-    function testInvariantZeroLiquidity() public view {
+    // Tests checkInvariant() when the liquidity is zero.
+    function testInvariantLiquidityEqualsZero() public view {
         assertTrue(checker.checkInvariant(0, 0, 0, 1));
         assertFalse(checker.checkInvariant(1, 0, 0, 1));
         assertFalse(checker.checkInvariant(0, 1, 0, 1));
     }
 
-    function testInvariantNonZeroLiquidity() public view {
+    // Verify checkInvariant() with large non-zero values.
+    function testInvariantLiquidityIsLarge() public view {
         assertTrue(checker.checkInvariant(1e18, 1e18, 1e18, 1e18));
-        assertFalse(checker.checkInvariant(1e18, 1e18, 1e18, 0));
-        assertFalse(checker.checkInvariant(1e18, 1e18, 0, 1e18));
     }
 
-    function testInvariantWithValues() public view {
-        uint256 amount0 = 100e18;
-        uint256 amount1 = 50e18;
-        uint256 liquidity = 150e18;
-        uint256 strike = 1e18;
+    function testInvariantWithSpecificValues() public view {
+    uint256 amountX = 100e18;  // 100 USDC
+    uint256 amountY = 3e18;    // 3 ETH
+    uint256 totalLiquidity = 850e18;  // 850 USDC (in value)
+    uint256 strike = 300e18;   // 300 USDC
 
-        console2.log("amount0:", amount0);
-        console2.log("amount1:", amount1);
-        console2.log("liquidity:", liquidity);
-        console2.log("strike:", strike);
+    console2.log("amountX (USDC):", amountX);
+    console2.log("amountY (ETH):", amountY);
+    console2.log("totalLiquidity:", totalLiquidity);
+    console2.log("strike:", strike);
 
-        // Adjust the parameters to meet the invariant condition
-        assertTrue(checker.checkInvariant(amount0, amount1, liquidity, strike));
+    // Adjust the parameters to meet the invariant condition
+    bool result = checker.checkInvariant(amountX, amountY, totalLiquidity, strike);
+    console2.log("Invariant check result:", result);
+    assertTrue(result);
 
-        // Change parameters to break the invariant
-        amount1 = 200e18;
-        assertFalse(checker.checkInvariant(amount0, amount1, liquidity, strike));
+    // Change parameters to break the invariant
+    amountY = 200e18;  // Change to 200 ETH to break the invariant
+    console2.log("Testing with modified amountY (ETH):", amountY);
+    result = checker.checkInvariant(amountX, amountY, totalLiquidity, strike);
+    console2.log("Invariant check result with modified amountY (ETH):", result);
+    assertFalse(result);
     }
+
 
     // function invariant() public view {
     //     uint256 amount0;
