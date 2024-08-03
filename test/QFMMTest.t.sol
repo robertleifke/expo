@@ -3,25 +3,25 @@ pragma solidity ^0.8.7;
 
 import "forge-std/src/Test.sol";
 import "forge-std/src/console2.sol";
-import {Quintic} from "../src/Quintic.sol";
+import {QFMM} from "../src/QFMM.sol";
 
 contract InvariantCheckerTest is Test {
-    Quintic invariant;
+    QFMM cfmm;
 
     function setUp() public {
-        invariant = new Quintic();
+        cfmm = new QFMM();
     }
 
     // Tests checkQuintic() when the liquidity is zero.
     function testQuinticLiquidityEqualsZero() public view {
-        assertTrue(invariant.checkQuintic(0, 0, 0, 1));
-        assertFalse(invariant.checkQuintic(1, 0, 0, 1));
-        assertFalse(invariant.checkQuintic(0, 1, 0, 1));
+        assertTrue(cfmm.checkQuartic(0, 0, 0, 1));
+        assertFalse(cfmm.checkQuartic(1, 0, 0, 1));
+        assertFalse(cfmm.checkQuartic(0, 1, 0, 1));
     }
 
     // Verify checkQuintic() with large non-zero values.
     function testQuinticLiquidityIsLarge() public view {
-        assertTrue(invariant.checkQuintic(1e18, 1e18, 1e18, 1e18));
+        assertTrue(cfmm.checkQuartic(1e18, 1e18, 1e18, 1e18));
     }
 
     // function testQuinticWithSpecificValues() public view {
