@@ -1,6 +1,6 @@
 # Squared
 
-![image](https://github.com/robertleifke/tesseract/assets/44106773/1f69d1e1-e4a5-4760-b785-34645fb1871e)
+![image](https://github.com/user-attachments/assets/06cfd20d-e63f-401a-98d8-a40f9d9578be)
 
 The smart contract suite for Squared, a CFMM that that executes an option strategy for which liquidity providers earn *yield* for underwriting "Squeeth" on on any token. The CFMM, Squared is designed to interact with Numo and other oracle-free lending markets. 
 
